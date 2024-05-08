@@ -32,7 +32,7 @@
             this.btnGuardar = new System.Windows.Forms.Button();
             this.btnSalir = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.resoluciones = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.button6 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -47,6 +47,11 @@
             this.label2 = new System.Windows.Forms.Label();
             this.Acercar = new System.Windows.Forms.Button();
             this.Alejar = new System.Windows.Forms.Button();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.radioButton3 = new System.Windows.Forms.RadioButton();
+            this.radioButton4 = new System.Windows.Forms.RadioButton();
+            this.resoluciones.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NCopias)).BeginInit();
             this.SuspendLayout();
@@ -90,13 +95,17 @@
             this.label1.TabIndex = 3;
             this.label1.Text = "Barra de herramientas";
             // 
-            // panel1
+            // resoluciones
             // 
-            this.panel1.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.panel1.Location = new System.Drawing.Point(137, 141);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(57, 238);
-            this.panel1.TabIndex = 4;
+            this.resoluciones.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.resoluciones.Controls.Add(this.radioButton4);
+            this.resoluciones.Controls.Add(this.radioButton3);
+            this.resoluciones.Controls.Add(this.radioButton2);
+            this.resoluciones.Controls.Add(this.radioButton1);
+            this.resoluciones.Location = new System.Drawing.Point(146, 158);
+            this.resoluciones.Name = "resoluciones";
+            this.resoluciones.Size = new System.Drawing.Size(126, 238);
+            this.resoluciones.TabIndex = 4;
             // 
             // panel2
             // 
@@ -154,8 +163,9 @@
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(85, 40);
             this.button4.TabIndex = 8;
-            this.button4.Text = "button4";
+            this.button4.Text = "Resolucion de img";
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // button5
             // 
@@ -231,19 +241,63 @@
             this.Alejar.UseVisualStyleBackColor = true;
             this.Alejar.Click += new System.EventHandler(this.btnZoomOut_Click);
             // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Location = new System.Drawing.Point(21, 12);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(42, 17);
+            this.radioButton1.TabIndex = 0;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "5x7";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(21, 60);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(98, 17);
+            this.radioButton2.TabIndex = 1;
+            this.radioButton2.TabStop = true;
+            this.radioButton2.Text = "Tamaño Infantil";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            // 
+            // radioButton3
+            // 
+            this.radioButton3.AutoSize = true;
+            this.radioButton3.Location = new System.Drawing.Point(21, 37);
+            this.radioButton3.Name = "radioButton3";
+            this.radioButton3.Size = new System.Drawing.Size(42, 17);
+            this.radioButton3.TabIndex = 2;
+            this.radioButton3.TabStop = true;
+            this.radioButton3.Text = "4x6";
+            this.radioButton3.UseVisualStyleBackColor = true;
+            // 
+            // radioButton4
+            // 
+            this.radioButton4.AutoSize = true;
+            this.radioButton4.Location = new System.Drawing.Point(21, 86);
+            this.radioButton4.Name = "radioButton4";
+            this.radioButton4.Size = new System.Drawing.Size(14, 13);
+            this.radioButton4.TabIndex = 3;
+            this.radioButton4.TabStop = true;
+            this.radioButton4.UseVisualStyleBackColor = true;
+            // 
             // InterfazEdicion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.InactiveCaption;
-            this.ClientSize = new System.Drawing.Size(1465, 793);
+            this.ClientSize = new System.Drawing.Size(1370, 749);
             this.Controls.Add(this.Acercar);
             this.Controls.Add(this.Alejar);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.PanelPre);
             this.Controls.Add(this.NCopias);
             this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.resoluciones);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnSalir);
             this.Controls.Add(this.btnGuardar);
@@ -252,6 +306,8 @@
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.resoluciones.ResumeLayout(false);
+            this.resoluciones.PerformLayout();
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.NCopias)).EndInit();
             this.ResumeLayout(false);
@@ -265,7 +321,7 @@
         private System.Windows.Forms.Button btnGuardar;
         private System.Windows.Forms.Button btnSalir;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel resoluciones;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button2;
@@ -280,6 +336,10 @@
         private System.Windows.Forms.NumericUpDown NCopias;
         private System.Windows.Forms.Panel PanelPre;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.RadioButton radioButton3;
+        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton radioButton4;
     }
 }
 

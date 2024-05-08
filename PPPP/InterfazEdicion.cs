@@ -25,6 +25,7 @@ namespace PPPP
 
             InitializeComponent();
             openFileDialog1.ShowDialog(this);
+            resoluciones.Visible = false;
 
         }
 
@@ -236,6 +237,27 @@ namespace PPPP
             // Liberar los recursos del bitmap
             bmp.Dispose();
 
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+
+            if (resoluciones.Visible == true)
+            {
+
+                resoluciones.Visible = false;
+            }
+            else {
+                resoluciones.Visible = true;
+            }
+
+
+            
         }
     }
 
