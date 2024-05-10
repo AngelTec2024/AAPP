@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
 
@@ -8,19 +9,15 @@ namespace PPPP
 {
     public class Metodos
     {
-        
 
 
 
-
-
-        public void AddImageToPictureBox(string imagePath, PictureBox hoja,int inX,int inY)
+        public void AddImageToPictureBox(string imagePath, PictureBox hoja,int inX,int  inY)
         {
             // Cargar la imagen original
             Image originalImage = Image.FromFile(imagePath);
-
             // Redimensionar la imagen al formato 5x7 con 300pp
-            Image resizedImage = ResizeImage(originalImage, inX * 300, inY * 300);
+            Image resizedImage = ResizeImage(originalImage, (inX * 300), (inY * 300));
 
             // Mostrar la imagen redimensionada en el PictureBox
             hoja.SizeMode = PictureBoxSizeMode.StretchImage;

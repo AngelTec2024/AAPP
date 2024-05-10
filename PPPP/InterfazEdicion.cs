@@ -15,12 +15,13 @@ namespace PPPP
 {
     public partial class InterfazEdicion : Form
     {
-
-        int inX;
-        int inY;
+        Metodos Metodo = new Metodos();//llamar Clase
+        int inX; int inY;
         string FName;
         public StreamReader lector;
         PictureBox Hoja;
+        PictureBox Imagen = new PictureBox();
+        
         int NC;
         double zoomFactor = 1.0;
 
@@ -40,11 +41,10 @@ namespace PPPP
                 openFileDialog1.ShowDialog();
                 FName = openFileDialog1.FileName;
                 Console.WriteLine(FName);
-                PictureBox pictureBox = new PictureBox();
-                pictureBox.Size = pnPrevisualizacion.Size; // Tamaño de la imagen dentro del panel
-                pictureBox.SizeMode = PictureBoxSizeMode.StretchImage; // Escala la imagen para ajustarse al PictureBox
-                pictureBox.Image = System.Drawing.Image.FromFile(openFileDialog1.FileName); // Carga la imagen
-                pnPrevisualizacion.Controls.Add(pictureBox);// Agrega el PictureBox al panel
+                Imagen.Size = pnPrevisualizacion.Size; // Tamaño de la imagen dentro del panel
+                Imagen.SizeMode = PictureBoxSizeMode.StretchImage; // Escala la imagen para ajustarse al PictureBox
+                Imagen.Image = System.Drawing.Image.FromFile(openFileDialog1.FileName); // Carga la imagen
+                pnPrevisualizacion.Controls.Add(Imagen);// Agrega el PictureBox al panel
 
             }
             catch
@@ -125,7 +125,7 @@ namespace PPPP
             AbrirImagen(); // SELECCIONAR IMAGEN AL ABRIR LA VENTANA
         }
 
-        // Método para hacer zoom en la imagen de la hoja
+
         private void ZoomIn(PictureBox pictureBox)
         {
             Size tamañoOriginal = (Size)pictureBox.Tag;
@@ -135,25 +135,24 @@ namespace PPPP
             nuevoAncho = Math.Min(nuevoAncho, tamañoOriginal.Width);
             nuevoAlto = Math.Min(nuevoAlto, tamañoOriginal.Height);
             pictureBox.ClientSize = new Size(nuevoAncho, nuevoAlto);
-
-            
-
         }
 
         // Método para alejar la imagen de la hoja
         private void ZoomOut(PictureBox pictureBox)
         {
-
             Size tamañoActual = pictureBox.ClientSize;
-            int nuevoAncho = (int)(tamañoActual.Width / (1.1 * zoomFactor)); // Reducir el ancho en función del factor de zoom
-            int nuevoAlto = (int)(tamañoActual.Height / (1.1 * zoomFactor)); // Reducir el alto en función del factor de zoom
+            int nuevoAncho = (int)(tamañoActual.Width / 1.1);
+            int nuevoAlto = (int)(tamañoActual.Height / 1.1);
             pictureBox.ClientSize = new Size(nuevoAncho, nuevoAlto);
         }
 
-        // Ejemplo de manejo de eventos para los botones de zoom
+
+
+
+
         private void btnZoomIn_Click(object sender, EventArgs e)
         {
-            ZoomIn(Hoja);
+             ZoomIn(Hoja);
         }
 
         private void btnZoomOut_Click(object sender, EventArgs e)
@@ -161,7 +160,7 @@ namespace PPPP
             ZoomOut(Hoja);
 
         }
-        //
+
 
         private void NCopias_ValueChanged(object sender, EventArgs e)
         {
@@ -172,43 +171,56 @@ namespace PPPP
 
         private void AgrImgHoj(int nC, double zoomFactor)
         {
-            Hoja.Controls.Clear();
+            Hoja.Controls.Clear(); // Limpiar hoja
 
             int hojaAncho = Hoja.Width; // Ancho del contenedor Hoja
-            int maxImagenesPorLinea = hojaAncho / (100 + 20); // Calcula cuántas imágenes pueden caber en una línea
+            int hojaAlto = Hoja.Height; // Alto del contenedor Hoja
+
             int posX = 0; // Posición horizontal inicial
             int posY = 0; // Posición vertical inicial
+            int filaActualAncho = 0; // Ancho actual de la fila
+            int maxAlturaFila = 0; // Altura máxima de la fila actual
 
-            // Calcula el tamaño proporcional de las imágenes basado en el número de imágenes por línea
-            int imagenAncho = (hojaAncho - 20 * (maxImagenesPorLinea - 1)) / maxImagenesPorLinea; // Ancho de la imagen con margen
-            int imagenAlto = imagenAncho; // Altura de la imagen igual al ancho
-
+            // Iterar sobre cada imagen
             for (int i = 0; i < nC; i++)
             {
                 // Crear un nuevo PictureBox para la imagen
                 PictureBox pictureBox1 = new PictureBox();
+                pictureBox1.Image = Imagen.Image; // Asignar la imagen
+                pictureBox1.Size = Imagen.Size; // Asignar el tamaño de la imagen
 
-                // Establecer el tamaño de la imagen
-                pictureBox1.Size = new Size(imagenAncho, imagenAlto);
-
-                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom; // Escalar la imagen para ajustarse al PictureBox
-                pictureBox1.Image = System.Drawing.Image.FromFile(openFileDialog1.FileName); // Cargar la imagen desde el archivo seleccionado
-
-                pictureBox1.Location = new Point(posX, posY); // Establecer la posición del PictureBox en la hoja
-
-                // Agregar el PictureBox al PictureBox de la hoja
-                Hoja.Controls.Add(pictureBox1);
-
-                posX += imagenAncho + 20; // Mueve la posición horizontal para la próxima imagen (considerando un margen de 20 píxeles entre imágenes)
-
-                // Si llegamos al final de la línea, salta a la siguiente línea
-                if ((i + 1) % maxImagenesPorLinea == 0)
+                // Verificar si la imagen cabe en la fila actual
+                if (filaActualAncho + pictureBox1.Width <= hojaAncho)
                 {
-                    posX = 0; // Reinicia la posición horizontal
-                    posY += imagenAlto + 20; // Mueve la posición vertical para la próxima línea (considerando un margen de 20 píxeles entre líneas)
+                    // La imagen cabe en la fila actual
+                    pictureBox1.Location = new Point(posX + filaActualAncho, posY); // Posicionar la imagen en la fila
+                    filaActualAncho += pictureBox1.Width + 10; // Actualizar el ancho de la fila con el espacio entre imágenes
+
+                    // Actualizar la altura máxima de la fila
+                    if (pictureBox1.Height > maxAlturaFila)
+                    {
+                        maxAlturaFila = pictureBox1.Height;
+                    }
+                }
+                else
+                {
+                    // La imagen no cabe en la fila actual, mover a la siguiente fila
+                    posY += maxAlturaFila + 10; // Mover a la siguiente fila, usando la altura máxima de la fila actual
+                    posX = 0; // Reiniciar la posición horizontal
+                    filaActualAncho = pictureBox1.Width + 10; // Establecer el ancho de la nueva fila
+                    maxAlturaFila = pictureBox1.Height; // Restablecer la altura máxima de la fila actual
+                    pictureBox1.Location = new Point(posX, posY); // Posicionar la imagen en la nueva fila
+                }
+
+                // Verificar si la imagen cabe en el contenedor en términos de altura
+                if (posY + pictureBox1.Height <= hojaAlto)
+                {
+                    // Agregar el PictureBox al PictureBox de la hoja solo si cabe en el contenedor en términos de altura
+                    Hoja.Controls.Add(pictureBox1);
                 }
             }
         }
+
 
         private void label2_Click(object sender, EventArgs e)
         {
@@ -219,7 +231,6 @@ namespace PPPP
         {
 
         }
-
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             // Crear un bitmap del tamaño del PictureBox
@@ -227,7 +238,6 @@ namespace PPPP
 
             // Dibujar el contenido del PictureBox en el bitmap
             Hoja.DrawToBitmap(bmp, new Rectangle(0, 0, Hoja.Width, Hoja.Height));
-
             // Crear un cuadro de diálogo para guardar archivo
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "Archivos de imagen (*.jpg)|*.jpg|Documentos PDF (*.pdf)|*.pdf|Todos los archivos (*.*)|*.*";
@@ -250,26 +260,20 @@ namespace PPPP
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
 
-
-
         }
 
-
+            
 
         private void button4_Click(object sender, EventArgs e)
         {
 
             if (resoluciones.Visible == true)
             {
-
                 resoluciones.Visible = false;
             }
             else {
                 resoluciones.Visible = true;
             }
-
-
-            
         }
 
         private void radioButton3_CheckedChanged(object sender, EventArgs e)
@@ -287,29 +291,36 @@ namespace PPPP
 
         }
 
-        private void button8_Click(object sender, EventArgs e)
+        private void in5x7(object sender, EventArgs e)
         {
+            pnPrevisualizacion.Controls.Clear();
             Hoja.Controls.Clear();
             Metodos llamada = new Metodos();
-            PictureBox pictureBox1 = new PictureBox();
-            inX = 5;
-            inY = 7;
-            llamada.AddImageToPictureBox(openFileDialog1.FileName,pictureBox1,inX,inY);
-            Hoja.Controls.Add(pictureBox1);
-
-
+            inX = 5; inY = 7;
+            llamada.AddImageToPictureBox(openFileDialog1.FileName, Imagen, inX, inY);
+            pnPrevisualizacion.Controls.Add(Imagen);
         }
 
-        private void button9_Click(object sender, EventArgs e)
+        private void in4x6(object sender, EventArgs e)
         {
+            pnPrevisualizacion.Controls.Clear();
             Hoja.Controls.Clear();
             Metodos llamada = new Metodos();
-            PictureBox pictureBox1 = new PictureBox();
-            inX = 2;
-            inY = 2;
-            llamada.AddImageToPictureBox(openFileDialog1.FileName, pictureBox1, inX, inY);
-            Hoja.Controls.Add(pictureBox1);
+            inX = 4;
+            inY = 6;
+            llamada.AddImageToPictureBox(openFileDialog1.FileName, Imagen, inX, inY);
+            pnPrevisualizacion.Controls.Add(Imagen);
+        }
 
+        private void inInf(object sender, EventArgs e)
+        {
+            pnPrevisualizacion.Controls.Clear();
+            Hoja.Controls.Clear();
+            Metodos llamada = new Metodos();
+            //inX = 1.18;
+            //inY = 0.98;
+            llamada.AddImageToPictureBox(openFileDialog1.FileName, Imagen, inX, inY);
+            pnPrevisualizacion.Controls.Add(Imagen);
         }
     }
 
