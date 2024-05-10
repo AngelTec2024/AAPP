@@ -1,20 +1,49 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.IO;
+using System.Windows.Forms;
 
 namespace PPPP
 {
-    internal class Metodos
+    public class Metodos
     {
-    }
+        
 
-    public class Ajustar
-    {
-        public static int Sumar(int a, int b)
+
+
+
+
+        public void AddImageToPictureBox(string imagePath, PictureBox hoja,int inX,int inY)
         {
-            return a + b;
+            // Cargar la imagen original
+            Image originalImage = Image.FromFile(imagePath);
+
+            // Redimensionar la imagen al formato 5x7 con 300pp
+            Image resizedImage = ResizeImage(originalImage, inX * 300, inY * 300);
+
+            // Mostrar la imagen redimensionada en el PictureBox
+            hoja.SizeMode = PictureBoxSizeMode.StretchImage;
+            hoja.Size = resizedImage.Size;
+            hoja.Image = resizedImage;
         }
+
+        private Image ResizeImage(Image image, int width, int height)
+        {
+            Bitmap resizedImage = new Bitmap(width, height);
+            using (Graphics graphics = Graphics.FromImage(resizedImage))
+            {
+                graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                graphics.DrawImage(image, 0, 0, width, height);
+            }
+            return resizedImage;
+        }
+
+
+
+
+
+
+
     }
 }

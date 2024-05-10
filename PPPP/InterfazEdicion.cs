@@ -15,6 +15,10 @@ namespace PPPP
 {
     public partial class InterfazEdicion : Form
     {
+
+        int inX;
+        int inY;
+        string FName;
         public StreamReader lector;
         PictureBox Hoja;
         int NC;
@@ -24,7 +28,7 @@ namespace PPPP
         {
 
             InitializeComponent();
-            openFileDialog1.ShowDialog(this);
+            Metodos Metodos = new Metodos();   
             resoluciones.Visible = false;
 
         }
@@ -33,9 +37,9 @@ namespace PPPP
         {
             try
             {
-
-                lector = new StreamReader(openFileDialog1.FileName);
-
+                openFileDialog1.ShowDialog();
+                FName = openFileDialog1.FileName;
+                Console.WriteLine(FName);
                 PictureBox pictureBox = new PictureBox();
                 pictureBox.Size = pnPrevisualizacion.Size; // Tamaño de la imagen dentro del panel
                 pictureBox.SizeMode = PictureBoxSizeMode.StretchImage; // Escala la imagen para ajustarse al PictureBox
@@ -131,11 +135,15 @@ namespace PPPP
             nuevoAncho = Math.Min(nuevoAncho, tamañoOriginal.Width);
             nuevoAlto = Math.Min(nuevoAlto, tamañoOriginal.Height);
             pictureBox.ClientSize = new Size(nuevoAncho, nuevoAlto);
+
+            
+
         }
 
         // Método para alejar la imagen de la hoja
         private void ZoomOut(PictureBox pictureBox)
         {
+
             Size tamañoActual = pictureBox.ClientSize;
             int nuevoAncho = (int)(tamañoActual.Width / (1.1 * zoomFactor)); // Reducir el ancho en función del factor de zoom
             int nuevoAlto = (int)(tamañoActual.Height / (1.1 * zoomFactor)); // Reducir el alto en función del factor de zoom
@@ -242,7 +250,11 @@ namespace PPPP
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
 
+
+
         }
+
+
 
         private void button4_Click(object sender, EventArgs e)
         {
@@ -258,6 +270,46 @@ namespace PPPP
 
 
             
+        }
+
+        private void radioButton3_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void radioButton4_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            Hoja.Controls.Clear();
+            Metodos llamada = new Metodos();
+            PictureBox pictureBox1 = new PictureBox();
+            inX = 5;
+            inY = 7;
+            llamada.AddImageToPictureBox(openFileDialog1.FileName,pictureBox1,inX,inY);
+            Hoja.Controls.Add(pictureBox1);
+
+
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            Hoja.Controls.Clear();
+            Metodos llamada = new Metodos();
+            PictureBox pictureBox1 = new PictureBox();
+            inX = 2;
+            inY = 2;
+            llamada.AddImageToPictureBox(openFileDialog1.FileName, pictureBox1, inX, inY);
+            Hoja.Controls.Add(pictureBox1);
+
         }
     }
 
