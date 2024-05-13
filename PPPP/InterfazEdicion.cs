@@ -15,6 +15,19 @@ namespace PPPP
 {
     public partial class InterfazEdicion : Form
     {
+        int xDown = 0;
+        int yDown = 0;
+        int xUp = 0;
+        int yUp = 0;
+        Rectangle rectCropArea = new Rectangle();
+        System.IO.MemoryStream ms = new System.IO.MemoryStream();
+        Task timeout;
+        string fn = "";
+
+
+
+
+
         Metodos Metodo = new Metodos();//llamar Clase
         int inX; int inY;
         string FName;
@@ -24,13 +37,14 @@ namespace PPPP
         
         int NC;
         double zoomFactor = 1.0;
-
+        private bool recortarActivo = false;
         public InterfazEdicion()
         {
 
             InitializeComponent();
             Metodos Metodos = new Metodos();   
             resoluciones.Visible = false;
+            btnAplicar.Visible = false;
 
         }
 
@@ -45,7 +59,10 @@ namespace PPPP
                 Imagen.SizeMode = PictureBoxSizeMode.StretchImage; // Escala la imagen para ajustarse al PictureBox
                 Imagen.Image = System.Drawing.Image.FromFile(openFileDialog1.FileName); // Carga la imagen
                 pnPrevisualizacion.Controls.Add(Imagen);// Agrega el PictureBox al panel
-
+                pbRecortar.Image = Image.FromFile(openFileDialog1.FileName);
+               // pictureBox1.Controls.Add(Imagen);
+                fn = FName;
+                pbRecortar.Cursor = Cursors.Cross;
             }
             catch
             {
@@ -186,7 +203,7 @@ namespace PPPP
             {
                 // Crear un nuevo PictureBox para la imagen
                 PictureBox pictureBox1 = new PictureBox();
-                pictureBox1.Image = Imagen.Image; // Asignar la imagen
+                pictureBox1.Image = pbRecortar.Image; // Asignar la imagen
                 pictureBox1.Size = Imagen.Size; // Asignar el tamaño de la imagen
 
                 // Verificar si la imagen cabe en la fila actual
@@ -321,6 +338,108 @@ namespace PPPP
             //inY = 0.98;
             llamada.AddImageToPictureBox(openFileDialog1.FileName, Imagen, inX, inY);
             pnPrevisualizacion.Controls.Add(Imagen);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pnPrevisualizacion_MouseUp(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void pnPrevisualizacion_MouseDown(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void btnRecortar_Click(object sender, EventArgs e)
+        {
+            recortarActivo = true;
+            btnAplicar.Visible = true;
+            pbRecortar.Cursor = Cursors.Cross;
+        }
+
+
+
+
+
+        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (recortarActivo)
+            {
+                xUp = e.X;
+                yUp = e.Y;
+                Rectangle rec = new Rectangle(xDown, yDown, Math.Abs(xUp - xDown), Math.Abs(yUp - yDown));
+                using (Pen pen = new Pen(Color.YellowGreen, 3))
+                {
+                    pbRecortar.CreateGraphics().DrawRectangle(pen, rec);
+                }
+                rectCropArea = rec;
+                crop.Enabled = true;
+            }
+        }
+
+        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (recortarActivo)
+            {
+                pbRecortar.Invalidate();
+                xDown = e.X;
+                yDown = e.Y;
+                crop.Enabled = true;
+            }
+        }
+
+        private void PanelPre_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void btnAplicar_Click(object sender, EventArgs e)
+        {
+            pbRecortar.Visible = true;
+            try
+            {
+                // Crear un nuevo PictureBox para la imagen recortada
+                PictureBox recortadaPictureBox = new PictureBox();
+                recortadaPictureBox.Image = new Bitmap(rectCropArea.Width, rectCropArea.Height); // Crear un bitmap para la nueva imagen recortada
+                using (Graphics g = Graphics.FromImage(recortadaPictureBox.Image))
+                {
+                    g.DrawImage(pbRecortar.Image, new Rectangle(0, 0, rectCropArea.Width, rectCropArea.Height), rectCropArea, GraphicsUnit.Pixel);
+                }
+                recortadaPictureBox.SizeMode = PictureBoxSizeMode.Zoom; // Escalar la imagen para ajustarse al PictureBox
+
+                // Limpiar pnPrevisualizacion y agregar el PictureBox con la imagen recortada
+                pnPrevisualizacion.Controls.Clear();
+                pnPrevisualizacion.Controls.Add(recortadaPictureBox);
+
+                // Mostrar el botón para realizar un nuevo recorte si es necesario
+
+
+
+                // Crear un nuevo Bitmap para la imagen recortada
+                Bitmap recortadaBitmap = new Bitmap(rectCropArea.Width, rectCropArea.Height);
+                using (Graphics g = Graphics.FromImage(recortadaBitmap))
+                {
+                    g.DrawImage(pbRecortar.Image, new Rectangle(0, 0, rectCropArea.Width, rectCropArea.Height), rectCropArea, GraphicsUnit.Pixel);
+                }
+
+                // Actualizar la imagen de pbRecortar con la imagen recortada
+                pbRecortar.Image = recortadaBitmap;
+
+                // Ocultar el botón para realizar un nuevo recorte si es necesario
+                btnAplicar.Visible = false;
+                recortarActivo = false;
+
+
+            }
+            catch (Exception ex)
+            {
+                // Manejar cualquier excepción
+            }
         }
     }
 
