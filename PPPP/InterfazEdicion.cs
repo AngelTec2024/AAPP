@@ -60,7 +60,7 @@ namespace PPPP
                 Imagen.Image = System.Drawing.Image.FromFile(openFileDialog1.FileName); // Carga la imagen
                 pnPrevisualizacion.Controls.Add(Imagen);// Agrega el PictureBox al panel
                 pbRecortar.Image = Image.FromFile(openFileDialog1.FileName);
-               // pictureBox1.Controls.Add(Imagen);
+                pbRecortar.SizeMode = PictureBoxSizeMode.StretchImage; // Autoajuste de la imagen en pbRecortar
                 fn = FName;
                 pbRecortar.Cursor = Cursors.Cross;
             }
